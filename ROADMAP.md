@@ -20,11 +20,11 @@ Tracking progress phase by phase. Each phase has a matching GitHub issue for fin
 - [x] `loadtester`: Go open-loop generator (token-bucket via ticker, per-request CSV, success/app-error/unreachable classification) — Prometheus live export deferred to Phase 2
 - [x] Validate all three apps + load tester locally via `docker compose` — first real comparison run, see [docs/findings/phase1-local-uwsgi-vs-asgi.md](docs/findings/phase1-local-uwsgi-vs-asgi.md)
 
-## Phase 2 — Minikube
+## Phase 2 — Minikube ✅
 - [x] k8s manifests (Deployment, Service, resource requests/limits) for all three app variants
-- [ ] Prometheus + Grafana + Loki stack on minikube (still using one-off `kubectl top`/`uwsgi stats` checks — not enough to catch a transient queue spike)
+- [x] Prometheus + Grafana on minikube (`timonwong/uwsgi-exporter` sidecar translates uwsgi's native stats — `listen_queue_length`, `listen_queue_errors`, per-worker RSS — into Prometheus). Loki skipped — no structured logging pipeline needed yet.
 - [x] First end-to-end sweep on minikube: reproduce the capacity cliff at small scale — confirmed, see [docs/findings/phase2-minikube-reproduction.md](docs/findings/phase2-minikube-reproduction.md). Memory-per-model hypothesis did NOT hold at 30-thread scale — open question carried to Phase 3.
-- [ ] Thunder-lock on/off/SO_REUSEPORT comparison (still never tested — `THUNDER_LOCK` env wired up in the manifest, not yet exercised)
+- [x] Thunder-lock on/off comparison — tested for the first time (production never did). **No measurable difference at this scale** — see [docs/findings/phase2-thunder-lock.md](docs/findings/phase2-thunder-lock.md) for why (thunder-lock fixes idle-process wakeup waste, not a saturated thread pool; also only 2 workers here vs. production's 15). Live queue-depth tracking also settled the Phase 1 open question: queue peaked at 98/100 but `listen_queue_errors` stayed 0 — confirmed those were client-timeout artifacts, not real backlog rejection. SO_REUSEPORT comparison not yet done.
 
 ## Phase 3 — GKE (blocked on: confirming a non-production GCP project/account)
 - [ ] Provision GKE cluster (spot/preemptible nodes, autoscale-to-zero, cost guardrails)
@@ -38,4 +38,4 @@ Tracking progress phase by phase. Each phase has a matching GitHub issue for fin
 - [ ] Final blog post / portfolio piece tying all four threads back to the original mystery
 
 ---
-**Current phase: 1 → 2**
+**Current phase: 2 → 3** (blocked on GCP account confirmation)

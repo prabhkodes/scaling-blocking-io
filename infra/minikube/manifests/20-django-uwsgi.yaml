@@ -32,6 +32,20 @@ spec:
           readinessProbe:
             httpGet: { path: /health, port: 8000 }
             initialDelaySeconds: 2
+        # Sidecar: translates uwsgi's native JSON stats (port 9191) into
+        # Prometheus format, notably listen_queue / listen_queue_errors —
+        # the exact counters needed to settle the Phase 1 open question
+        # (is "unreachable" real backlog rejection, or a client-timeout
+        # artifact?) with a live time series instead of a one-off curl.
+        - name: uwsgi-exporter
+          image: timonwong/uwsgi-exporter:latest
+          args:
+            - --stats.uri=http://localhost:9191
+          ports:
+            - { containerPort: 9117, name: uwsgi-exp }
+          resources:
+            requests: { cpu: 20m, memory: 32Mi }
+            limits: { cpu: 100m, memory: 64Mi }
 ---
 apiVersion: v1
 kind: Service
@@ -44,3 +58,4 @@ spec:
   ports:
     - { name: http, port: 8000, targetPort: 8000 }
     - { name: stats, port: 9191, targetPort: 9191 }
+    - { name: uwsgi-exp, port: 9117, targetPort: 9117 }

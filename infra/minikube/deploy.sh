@@ -17,7 +17,9 @@ kubectl --context="$PROFILE" apply -f "$ROOT/infra/minikube/manifests/"
 echo
 echo "waiting for rollout..."
 kubectl --context="$PROFILE" -n scaling-study rollout status deployment/mock-third-party --timeout=60s
-kubectl --context="$PROFILE" -n scaling-study rollout status deployment/django-uwsgi --timeout=60s
+kubectl --context="$PROFILE" -n scaling-study rollout status deployment/django-uwsgi --timeout=90s
 kubectl --context="$PROFILE" -n scaling-study rollout status deployment/fastapi-async --timeout=60s
+kubectl --context="$PROFILE" -n scaling-study rollout status deployment/prometheus --timeout=120s
+kubectl --context="$PROFILE" -n scaling-study rollout status deployment/grafana --timeout=120s
 
 kubectl --context="$PROFILE" -n scaling-study get pods -o wide
