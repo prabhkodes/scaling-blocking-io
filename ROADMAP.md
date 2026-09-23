@@ -21,10 +21,10 @@ Tracking progress phase by phase. Each phase has a matching GitHub issue for fin
 - [x] Validate all three apps + load tester locally via `docker compose` — first real comparison run, see [docs/findings/phase1-local-uwsgi-vs-asgi.md](docs/findings/phase1-local-uwsgi-vs-asgi.md)
 
 ## Phase 2 — Minikube
-- [ ] k8s manifests (Deployment, Service, resource requests/limits) for all three app variants
-- [ ] Prometheus + Grafana + Loki stack on minikube
-- [ ] First end-to-end sweep on minikube: reproduce the capacity cliff at small scale
-- [ ] Thunder-lock on/off/SO_REUSEPORT comparison
+- [x] k8s manifests (Deployment, Service, resource requests/limits) for all three app variants
+- [ ] Prometheus + Grafana + Loki stack on minikube (still using one-off `kubectl top`/`uwsgi stats` checks — not enough to catch a transient queue spike)
+- [x] First end-to-end sweep on minikube: reproduce the capacity cliff at small scale — confirmed, see [docs/findings/phase2-minikube-reproduction.md](docs/findings/phase2-minikube-reproduction.md). Memory-per-model hypothesis did NOT hold at 30-thread scale — open question carried to Phase 3.
+- [ ] Thunder-lock on/off/SO_REUSEPORT comparison (still never tested — `THUNDER_LOCK` env wired up in the manifest, not yet exercised)
 
 ## Phase 3 — GKE (blocked on: confirming a non-production GCP project/account)
 - [ ] Provision GKE cluster (spot/preemptible nodes, autoscale-to-zero, cost guardrails)

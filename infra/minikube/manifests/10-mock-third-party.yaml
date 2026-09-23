@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mock-third-party
+  namespace: scaling-study
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: mock-third-party }
+  template:
+    metadata:
+      labels: { app: mock-third-party }
+    spec:
+      containers:
+        - name: mock-third-party
+          image: scaling-blocking-io-mock-third-party:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+          env:
+            - { name: MEDIAN_MS, value: "8000" }
+            - { name: SIGMA, value: "0.5" }
+            - { name: MAX_MS, value: "20000" }
+          resources:
+            requests: { cpu: 50m, memory: 32Mi }
+            limits: { cpu: 250m, memory: 64Mi }
+          readinessProbe:
+            httpGet: { path: /health, port: 9000 }
+            initialDelaySeconds: 1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mock-third-party
+  namespace: scaling-study
+spec:
+  selector: { app: mock-third-party }
+  ports:
+    - port: 9000
+      targetPort: 9000
