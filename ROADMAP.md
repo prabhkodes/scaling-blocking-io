@@ -1,6 +1,11 @@
 # Roadmap
 
-Tracking progress phase by phase. Each phase also has a matching GitHub issue for finer-grained tasks.
+Tracking progress phase by phase. Each phase has a matching GitHub issue for finer-grained tasks:
+[#1 Phase 0](https://github.com/prabhkodes/scaling-blocking-io/issues/1) ·
+[#2 Phase 1](https://github.com/prabhkodes/scaling-blocking-io/issues/2) ·
+[#3 Phase 2](https://github.com/prabhkodes/scaling-blocking-io/issues/3) ·
+[#4 Phase 3](https://github.com/prabhkodes/scaling-blocking-io/issues/4) ·
+[#5 Phase 4](https://github.com/prabhkodes/scaling-blocking-io/issues/5)
 
 ## Phase 0 — Hypothesis & design
 - [x] Capacity math from real production numbers (Little's Law, exhaustion window)
