@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# Go
+loadtester/bin/
+*.exe
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+
+# Results / data (raw run output stays local, only curated findings get committed)
+analysis/data/
+*.parquet
+
+# Env / secrets
+.env
+*.pem
+kubeconfig*
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
