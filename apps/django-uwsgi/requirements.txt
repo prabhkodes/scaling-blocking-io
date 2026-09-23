@@ -1,0 +1,4 @@
+django==5.1.4
+uwsgi==2.0.28
+requests==2.32.3
+prometheus-client==0.21.1

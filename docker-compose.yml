@@ -1,0 +1,33 @@
+services:
+  mock-third-party:
+    build: ./apps/mock-third-party
+    ports:
+      - "9000:9000"
+    environment:
+      MEDIAN_MS: "${MOCK_MEDIAN_MS:-8000}"
+      SIGMA: "${MOCK_SIGMA:-0.5}"
+      MAX_MS: "${MOCK_MAX_MS:-20000}"
+
+  django-uwsgi:
+    build: ./apps/django-uwsgi
+    ports:
+      - "8001:8000"
+      - "9191:9191" # uwsgi stats server
+    environment:
+      THIRD_PARTY_URL: "http://mock-third-party:9000/delay"
+      WORKERS: "${DJANGO_WORKERS:-4}"
+      THREADS: "${DJANGO_THREADS:-4}"
+      THUNDER_LOCK: "${THUNDER_LOCK:-false}"
+    depends_on:
+      - mock-third-party
+
+  fastapi-async:
+    build: ./apps/fastapi-async
+    ports:
+      - "8002:8000"
+    environment:
+      THIRD_PARTY_URL: "http://mock-third-party:9000/delay"
+      WORKERS: "${FASTAPI_WORKERS:-4}"
+      LIMIT_CONCURRENCY: "${FASTAPI_LIMIT_CONCURRENCY:-}"
+    depends_on:
+      - mock-third-party
