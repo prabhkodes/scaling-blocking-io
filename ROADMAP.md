@@ -26,7 +26,7 @@ Tracking progress phase by phase. Each phase has a matching GitHub issue for fin
 - [x] First end-to-end sweep on minikube: reproduce the capacity cliff at small scale — confirmed, see [docs/findings/phase2-minikube-reproduction.md](docs/findings/phase2-minikube-reproduction.md). Memory-per-model hypothesis did NOT hold at 30-thread scale — open question carried to Phase 3.
 - [x] Thunder-lock on/off comparison — tested for the first time (production never did). **No measurable difference at this scale** — see [docs/findings/phase2-thunder-lock.md](docs/findings/phase2-thunder-lock.md) for why (thunder-lock fixes idle-process wakeup waste, not a saturated thread pool; also only 2 workers here vs. production's 15). Live queue-depth tracking also settled the Phase 1 open question: queue peaked at 98/100 but `listen_queue_errors` stayed 0 — confirmed those were client-timeout artifacts, not real backlog rejection. SO_REUSEPORT comparison not yet done.
 
-## Phase 3 — GKE (blocked on: confirming a non-production GCP project/account)
+## Phase 3 — GKE
 - [ ] Provision GKE cluster (spot/preemptible nodes, autoscale-to-zero, cost guardrails)
 - [ ] Argo Workflows for automated matrix sweeps
 - [ ] Full sync-vs-async-vs-queue comparison at realistic 200–600 RPS scale
